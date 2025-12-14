@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Filips Net Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Lexend font -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --white-darkish: #d9d9d9;
+      --white-soft: #f2f2f2;
+      --panel-bg: rgba(255, 255, 255, 0.55);
+      --panel-border: rgba(0, 0, 0, 0.25);
+      --text-dark: #1a1a1a;
+      --accent: #8b0000; /* dark red */
+      --accent-bright: #b30000;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Lexend", sans-serif;
+      font-weight: 600;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--white-darkish), var(--white-soft));
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* GIANT FILIP WATERMARK */
+    body::before {
+      content: "FILIP";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg);
+      font-size: 18rem;
+      color: rgba(0,0,0,0.05);
+      pointer-events: none;
+      user-select: none;
+      z-index: -1;
+    }
+
+    /* Snowfall */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: black;
+      font-size: 1rem;
+      user-select: none;
+      animation: fall linear infinite;
+      opacity: 0.9;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    /* Big glowing FILIP banner */
+    .filip-brand {
+      margin-top: 20px;
+      font-size: 3rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(139,0,0,0.6), 0 0 22px rgba(139,0,0,0.4);
+      animation: filipGlow 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes filipGlow {
+      0% { text-shadow: 0 0 8px rgba(139,0,0,0.4); }
+      100% { text-shadow: 0 0 22px rgba(139,0,0,0.9); }
+    }
+
+    /* Jolly title */
+    .jolly {
+      margin-top: 20px;
+      text-align: center;
+      animation: fadeIn 1s ease-out forwards;
+      opacity: 0;
+    }
+
+    .jolly h1 {
+      font-size: 2.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .jolly p {
+      margin-top: 6px;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Panel */
+    .panel {
+      width: 100%;
+      max-width: 540px;
+      background: var(--panel-bg);
+      border-radius: 20px;
+      padding: 26px;
+      margin-top: 40px;
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      position: relative;
+      animation: slideUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Filip badge */
+    .filip-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--accent);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      box-shadow: 0 0 10px rgba(139,0,0,0.4);
+    }
+
+    /* PURE CSS CHRISTMAS HAT */
+    .hat {
+      position: absolute;
+      top: -60px;
+      right: -30px;
+      width: 90px;
+      height: 60px;
+      transform-origin: top center;
+      animation: hatSwing 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes hatSwing {
+      0% { transform: rotate(8deg); }
+      100% { transform: rotate(-8deg); }
+    }
+
+    .hat .top {
+      width: 70px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 50px 50px 0 0;
+      position: absolute;
+      top: 0;
+      left: 10px;
+      transform: rotate(-20deg);
+    }
+
+    .hat .fold {
+      width: 90px;
+      height: 22px;
+      background: white;
+      border-radius: 20px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border: 2px solid #ccc;
+    }
+
+    .hat .ball {
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 25px;
+      right: -5px;
+      border: 2px solid #ccc;
+    }
+
+    /* Form */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .input {
+      border-radius: 10px;
+      border: 1px solid #aaa;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      outline: none;
+    }
+
+    /* Environment buttons */
+    .env-options {
+      display: flex;
+      gap: 10px;
+    }
+
+    .env-button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 999px;
+      border: 1px solid #4a0000;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: 0.2s;
+    }
+
+    .env-button.active {
+      background: var(--accent-bright);
+      border-color: #ff4d4d;
+    }
+
+    /* Submit */
+    .submit-button {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: 0.2s;
+    }
+
+    .submit-button:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Loading */
+    .status {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .loading-dots {
+      display: inline-flex;
+      gap: 3px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: black;
+      border-radius: 50%;
+      animation: bounce 1s infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.15s; }
+    .dot:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* Popup */
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      max-width: 360px;
+      text-align: center;
+    }
+
+    .popup-button {
+      margin-top: 12px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    .filip-footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+      letter-spacing: 0.15em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Snowflakes -->
+  <script>
+    for (let i = 0; i < 50; i++) {
+      let snow = document.createElement("div");
+      snow.className = "snowflake";
+      snow.innerHTML = "❄";
+      snow.style.left = Math.random() * 100 + "vw";
+      snow.style.animationDuration = 4 + Math.random() * 6 + "s";
+      snow.style.fontSize = (12 + Math.random() * 14) + "px";
+      document.body.appendChild(snow);
+    }
+  </script>
+
+  <!-- FILIP Branding -->
+  <div class="filip-brand">FILIP</div>
+
+  <!-- Jolly Title -->
+  <div class="jolly">
+    <h1>You feeling Jolly? 🍬</h1>
+    <p>shawarma for life</p>
+  </div>
+
+  <!-- Panel -->
+  <main class="panel">
+    <div class="filip-badge">FILIP</div>
+
+    <!-- CSS Christmas Hat -->
+    <div class="hat">
+      <div class="top"></div>
+      <div class="fold"></div>
+      <div class="ball"></div>
+    </div>
+
+    <h2>Wifi Scan</h2>
+    <p style="opacity:0.7; font-size:0.9rem;">Filip Corporations</p>
+
+    <form class="form" id="wifiForm">
+      <div class="field">
+        <label class="field-label">Router IP Seed (Demo)</label>
+        <input class="input" type="text" placeholder="192.168.0.1-seed">
+      </div>
+
+      <div class="field">
+        <label class="field-label">Subnet Mask (Demo)</label>
+        <input class="input" type="text" placeholder="255.255.255.0">
+      </div>
+
+      <div class="field">
+        <label class="field-label">Environment</label>
+        <div class="env-options">
+          <button type="button" class="env-button" data-env="school">School</button>
+          <button type="button" class="env-button" data-env="home">Home</button>
+        </div>
+        <input type="hidden" id="environment">
+      </div>
+
+      <div class="field">
+        <label class="field-label">Network Name (Demo)</label>
+        <input class="input" type="text" placeholder="FilipNet-5G">
+      </div>
+
+      <button class="submit-button" type="submit">Submit</button>
+      <div class="status" id="status"></div>
+    </form>
+  </main>
+
+  <!-- Popup -->
+  <div class="popup-backdrop" id="popupBackdrop">
+    <div class="popup">
+      <h3>Access Granted</h3>
+      <p>You now have Airplay Administrator Permissions (demo only).</p>
+      <button class="popup-button" id="popupClose">OK</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="filip-footer">Powered by Filip</div>
+
+  <script>
+    const envButtons = document.querySelectorAll(".env-button");
+    const envHidden = document.getElementById("environment");
+
+    envButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        envButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        envHidden.value = btn.dataset.env;
+      });
+    });
+
+    const form = document.getElementById("wifiForm");
+    const statusEl = document.getElementById("status");
+    const popupBackdrop = document.getElementById("popupBackdrop");
+    const popupClose = document.getElementById("popupClose");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      statusEl.innerHTML = `
+        <span>Process loading</span>
+        <span class="loading-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </span>
+      `;
+
+      setTimeout(() => {
+        statusEl.innerHTML = "";
+        popupBackdrop.style.display = "flex";
+      }, 2000);
+    });
+
+    popupClose.addEventListener("click", () => {
+      popupBackdrop.style.display = "none";
+    });
+  </script>
+
+</body>
+</html>
